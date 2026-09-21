@@ -1,0 +1,21 @@
+services:
+  api:
+    build: .
+    image: rule-decision-service:latest
+    container_name: rule-decision-service
+    ports:
+      - "8000:8000"
+    environment:
+      RULES_DB_PATH: /data/rules.db
+      SEED_DEMO_DATA: "true"
+    volumes:
+      - rule-data:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  rule-data:
